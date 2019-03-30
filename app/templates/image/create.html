@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.js"></script>
+
+
+<style>
+    .dropzone {
+        border: 1px dashed lightgray;
+        margin-top: 25%;
+        min-height: 300px;
+    }
+</style>
+
+<script>
+
+
+</script>
+
+
+<div class="row">
+    <div class="col-lg-8 offset-md-2">
+
+
+        <form action="/create"
+              class="dropzone"
+              id="my-awesome-dropzone"></form>
+
+    </div>
+</div>
+{% endblock %}

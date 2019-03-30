@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+
+<div class="row">
+
+    <div class="col-md-12">
+
+        <h1 class="text-center" id="title" style="margin-top:130px;margin-bottom: 100px; font-weight: 400">
+            ★·.·´¯`·.·★ ɪᴍᴀɢᴇ sᴇᴀʀᴄʜ ★·.·´¯`·.·★</h1>
+
+
+        <h5 id="title-sm" style="display: none;">ɪᴍᴀɢᴇ sᴇᴀʀᴄʜ</h5>
+
+
+        <div class="input-group">
+            <input type="text" class="form-control" name="text" id="text">
+        </div>
+    </div>
+</div>
+
+
+<script src="{{ url_for('static', filename='engine_index.js') }}"></script>
+
+
+{% endblock %}
