@@ -26,8 +26,8 @@ def init_db():
         waiter.wait(TableName=table)
 
     print('creating tables')
-
-    get_db().create_table(
+    db = get_db()
+    db.create_table(
         TableName='Users',
         KeySchema=[
             {
@@ -49,7 +49,7 @@ def init_db():
         }
     )
 
-    get_db().create_table(
+    db.create_table(
         TableName='Images',
         KeySchema=[
             {
@@ -70,6 +70,27 @@ def init_db():
                 'AttributeName': 'user',
                 'AttributeType': 'S'
             }
+        ],
+        ProvisionedThroughput={
+            'ReadCapacityUnits': 10,
+            'WriteCapacityUnits': 10
+        }
+    )
+    db.create_table(
+        TableName='Index',
+        KeySchema=[
+            {
+                'AttributeName': 'label',
+                'KeyType': 'HASH'  # Partition key
+            },
+
+        ],
+        AttributeDefinitions=[
+            {
+                'AttributeName': 'label',
+                'AttributeType': 'S'
+            }
+
         ],
         ProvisionedThroughput={
             'ReadCapacityUnits': 10,

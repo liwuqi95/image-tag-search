@@ -15,7 +15,7 @@ cl = boto3.client('s3',
                   aws_secret_access_key='ixPbOT2vYAyVsVfHq7n3GpCwCUhdV+tIocCvcuP7',
                   region_name='us-east-1')
 
-bucket = s3.Bucket('ece1779a2group123bucket')
+bucket = s3.Bucket('ece1779projecta3bucket')
 
 
 db = boto3.resource('dynamodb',
@@ -35,17 +35,15 @@ def move_to_s3(image, key):
 
     print("Moved to s3")
 
-
 def get_db():
     return db
 
 def get_db_client():
     return db_client
 
-
 def list_objects():
     """list all the s3 objects"""
-    res = cl.list_objects(Bucket='ece1779a2group123bucket')
+    res = cl.list_objects(Bucket='ece1779projecta3bucket')
     if 'Contents' not in res.keys(): return None
     return [{'Key': obj['Key']} for obj in res['Contents']]
 

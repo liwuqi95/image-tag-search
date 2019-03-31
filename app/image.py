@@ -11,7 +11,7 @@ from app import app
 from datetime import datetime
 
 bp = Blueprint('image', __name__)
-url_prefix = 'https://s3.amazonaws.com/ece1779a2group123bucket'
+url_prefix = 'https://s3.amazonaws.com/ece1779projecta3bucket'
 
 
 def get_url(type, image):
