@@ -3,7 +3,6 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 
-import os
 from app.auth import login_required
 from app.aws import move_to_s3, get_db
 from boto3.dynamodb.conditions import Key, Attr
@@ -11,11 +10,11 @@ from app import app
 from datetime import datetime
 
 bp = Blueprint('image', __name__)
-url_prefix = 'https://s3.amazonaws.com/ece1779projecta3bucket'
+url_prefix = 'https://s3.amazonaws.com/ece1779projecta3bucket/'
 
 
 def get_url(type, image):
-    key = '/' + str(image["id"])
+    key = type + '/' + str(image["id"])
     return url_prefix + key
 
 
@@ -91,7 +90,8 @@ def create():
 
             file = request.files['file']
             filename = file.filename
-            id = datetime.utcnow().strftime("%Y-%m-%d-%H-%M-%S") + g.user['username'].replace('.', '').replace('/', '')
+            id = datetime.utcnow().strftime("%Y-%m-%d-%H-%M-%S-%f") + g.user['username'].replace('.', '').replace('/',
+                                                                                                                  '')
             filename = str(id) + '.' + filename.rsplit('.', 1)[1].lower()
 
             table = get_db().Table('Images')

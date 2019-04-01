@@ -31,7 +31,7 @@ db_client = boto3.client('dynamodb',
 def move_to_s3(image, key):
     """store image to s3"""
 
-    bucket.upload_fileobj(image, key)
+    bucket.upload_fileobj(image, 'images/' +key)
 
     print("Moved to s3")
 
