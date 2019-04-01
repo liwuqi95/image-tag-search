@@ -9,9 +9,9 @@ $('#text').on('change', function () {
     }
 
     $('#results').html('');
-
-
+    $('#result-text').hide();
     text = $('#text').val();
+
 
     if (text !== '') {
 
@@ -22,15 +22,21 @@ $('#text').on('change', function () {
             success: function (result) {
                 $('.loading').hide(1000);
 
-                result.every(function (label) {
-                    ids = label.ids;
-                    ids.every(function (id) {
+                result.forEach(function (label) {
 
+                    ids = label.ids;
+                    ids.forEach(function (id) {
                         template = $('#template').children(":first").clone();
 
                         template.find('img').attr("src", 'https://s3.amazonaws.com/ece1779projecta3bucket/thumbnails/' + id);
 
+                        template.find('a').attr("href", 'image/' + id);
+
                         $('#results').append(template);
+
+
+                        $('#result-text').find('strong').html(String($('#results').children().length));
+                        $('#result-text').show();
 
 
                     });

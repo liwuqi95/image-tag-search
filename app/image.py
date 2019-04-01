@@ -8,6 +8,7 @@ from app.aws import move_to_s3, get_db
 from boto3.dynamodb.conditions import Key, Attr
 from app import app
 from datetime import datetime
+import json
 
 bp = Blueprint('image', __name__)
 url_prefix = 'https://s3.amazonaws.com/ece1779projecta3bucket/'
@@ -42,24 +43,8 @@ def index():
 @login_required
 def show(id):
     """Show image details by given id"""
-    cursor = get_db().cursor(dictionary=True)
 
-    cursor.execute(
-        'SELECT p.id, name, user_id, created'
-        ' FROM images p'
-        ' WHERE p.id = %s',
-        (id,))
-
-    image = cursor.fetchone()
-
-    if image is None:
-        abort(404, "Image doesn't exist.".format(id))
-
-    if image['user_id'] != g.user['id']:
-        abort(403)
-
-    return render_template('image/show.html', image=image, image_url=get_url('images', image),
-                           face_url=get_url('faces', image))
+    return render_template('image/show.html', image=id)
 
 
 ##TODO add more image types
