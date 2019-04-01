@@ -20,7 +20,7 @@ $('#text').on('change', function () {
         $.ajax({
             url: "/engine/batch/" + text + '/' + page,
             success: function (result) {
-                $('.loading').hide(1000);
+                $('.loading').hide(800);
 
                 result.forEach(function (label) {
 
@@ -46,6 +46,10 @@ $('#text').on('change', function () {
 
             }
         });
+    } else {
+        $('#title').slideDown();
+        $('#title-sm').hide();
+        small_text = false;
     }
 
 
