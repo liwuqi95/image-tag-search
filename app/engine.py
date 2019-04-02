@@ -19,9 +19,17 @@ def index():
 def image_batch(query):
     table = get_db().Table('Index')
 
-    response = table.scan(
-        FilterExpression=Key('label').eq(query.lower())
-    )
+    if query != '$ANY$':
+        response = table.scan(
+            FilterExpression=Key('label').eq(query.lower())
+        )
+    else:
+        table = get_db().Table('Images')
+        response = table.scan(
+            Limit=10
+        )
+
+        response['Items'] = [{'ids': list(map(lambda i: i['imageid'], list(response['Items'])))}]
 
     images = response['Items'] if response['Items'] else []
 

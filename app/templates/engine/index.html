@@ -20,6 +20,12 @@
             background-color: white;
         }
 
+        #notice {
+            display: none;
+            margin-top: 80px;
+        }
+
+
     </style>
 
 
@@ -46,6 +52,14 @@
 
             <div class="loading text-center" style="display: none; padding: 40px;">
                 <img src="{{ url_for('static', filename='loading.gif') }}" width="20%">
+            </div>
+
+            <div id="notice">
+                <div class="text-center">
+                    <p>Unable to find any image matching your keywords.</p>
+                </div>
+
+                <h6 style="padding-top: 50px; font-weight: 600">Images you may like:</h6>
             </div>
 
             <div class="row" id="results">

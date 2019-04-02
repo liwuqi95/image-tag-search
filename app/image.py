@@ -52,7 +52,9 @@ def show(id):
         }
     )
 
-    return render_template('image/show.html', image=response['Item'])
+    image = response['Item'] if 'Item' in response else {'imageid': id, 'user': ''}
+
+    return render_template('image/show.html', image=image)
 
 
 @bp.route('/image/remove/<string:id>')

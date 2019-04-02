@@ -53,10 +53,13 @@ var refreshImages = function (text) {
                     $('#result-text').find('strong').html(String($('#results').children().length));
                     $('#result-text').show();
                 });
+            });
 
+            if (result.length < 1) {
+                $('#notice').show();
 
-            })
-
+                refreshImages('$ANY$');
+            }
         }
     });
 
@@ -68,6 +71,7 @@ $('#text').on('change', function () {
 
     $('#results').html('');
     $('#result-text').hide();
+    $('#notice').hide();
 
     var text = $('#text').val();
 
