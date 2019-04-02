@@ -35,6 +35,12 @@ def move_to_s3(image, key):
     print("Moved to s3")
 
 
+def delete_on_s3(key):
+    bucket.delete_objects(Delete={
+        'Objects': [{'Key': 'images/' + key}, {'Key': 'celebrityFaces/' + key}, {'Key': 'labels/' + key},
+                    {'Key': 'thumbnails/' + key}, {'Key': 'faceDetails/' + key}]})
+
+
 def get_db():
     return db
 

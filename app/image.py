@@ -4,7 +4,7 @@ from flask import (
 from werkzeug.exceptions import abort
 
 from app.auth import login_required
-from app.aws import move_to_s3, get_db
+from app.aws import move_to_s3, get_db, delete_on_s3
 from boto3.dynamodb.conditions import Key, Attr
 from app import app
 from datetime import datetime
@@ -15,7 +15,7 @@ url_prefix = 'https://s3.amazonaws.com/ece1779projecta3bucket/'
 
 
 def get_url(type, image):
-    key = type + '/' + str(image["id"])
+    key = type + '/' + str(image["imageid"])
     return url_prefix + key
 
 
@@ -27,13 +27,13 @@ def index():
     table = get_db().Table('Images')
 
     response = table.scan(
-        FilterExpression=Key('user').eq(g.user['username'])
+        FilterExpression=Attr('user').eq(g.user['username'])
     )
 
     images = response['Items'] if response['Items'] else []
 
     for image in images:
-        image['id'] = str(image['id'])
+        image['imageid'] = str(image['imageid'])
         image['thumb'] = get_url('thumbnails', image)
 
     return render_template('image/index.html', images=images)
@@ -44,7 +44,33 @@ def index():
 def show(id):
     """Show image details by given id"""
 
-    return render_template('image/show.html', image=id)
+    table = get_db().Table('Images')
+
+    response = table.get_item(
+        Key={
+            'imageid': str(id)
+        }
+    )
+
+    return render_template('image/show.html', image=response['Item'])
+
+
+@bp.route('/image/remove/<string:id>')
+@login_required
+def remove(id):
+    """Show image details by given id"""
+
+    table = get_db().Table('Images')
+
+    table.delete_item(
+        Key={
+            'imageid': str(id)
+        }
+    )
+
+    delete_on_s3(id)
+
+    return redirect(url_for('image.index'))
 
 
 ##TODO add more image types
@@ -72,7 +98,6 @@ def create():
         elif '\'' in request.files['file'].filename or '\"' in request.files['file'].filename:
             error = "Invalid file name."
         else:
-
             file = request.files['file']
             filename = file.filename
             id = datetime.utcnow().strftime("%Y-%m-%d-%H-%M-%S-%f") + g.user['username'].replace('.', '').replace('/',
@@ -83,7 +108,7 @@ def create():
 
             table.put_item(
                 Item={
-                    'id': filename,
+                    'imageid': filename,
                     'user': g.user['username']
                 }
             )
@@ -92,5 +117,7 @@ def create():
 
         if error is not None:
             flash(error)
+
+        return 'ok\n'
 
     return render_template('image/create.html')

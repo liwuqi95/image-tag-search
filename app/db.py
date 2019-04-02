@@ -53,21 +53,13 @@ def init_db():
         TableName='Images',
         KeySchema=[
             {
-                'AttributeName': 'id',
+                'AttributeName': 'imageid',
                 'KeyType': 'HASH'  # Partition key
-            },
-            {
-                'AttributeName': 'user',
-                'KeyType': 'RANGE'  # Partition key
             }
         ],
         AttributeDefinitions=[
             {
-                'AttributeName': 'id',
-                'AttributeType': 'S'
-            },
-            {
-                'AttributeName': 'user',
+                'AttributeName': 'imageid',
                 'AttributeType': 'S'
             }
         ],
@@ -97,9 +89,6 @@ def init_db():
             'WriteCapacityUnits': 10
         }
     )
-
-    print('clearing s3')
-    clear_s3()
 
 
 @click.command('init-db')

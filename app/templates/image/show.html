@@ -34,12 +34,19 @@
     <div class="row" style="padding-top: 20px;">
 
 
-        <div class="col-md-8" id="image-box" data-id="{{ image }}">
+        <div class="col-md-8" id="image-box" data-id="{{ image['imageid'] }}">
             <div id="container" style="width: 100%"></div>
         </div>
 
 
         <div class="col-md-4">
+            {% if g.user['username'] == image['user'] %}
+                <div class="text-right">
+                    <a href="{{ url_for('image.remove', id=image['imageid']) }}"
+                       onclick="return confirm('Are you sure to delete this image?')" class="btn btn-outline-danger">Delete</a>
+                </div>
+
+            {% endif %}
 
             <div class="row" id="block-faceDetails">
                 <div class="col-md-12">
@@ -77,7 +84,7 @@
 
 
     <div id="template-faceDetails" style="display: none">
-        <div class="col-md-4 d-flex align-items-stretch">
+        <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
             <div class="card clickable" style="width: 100%; margin-bottom: 10px;" onclick="">
                 <div class="card-body text-center" style="padding: 10px">
                     <p class="gender" style="margin-bottom: 10px"></p>
