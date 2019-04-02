@@ -3,39 +3,101 @@
 
 {% block content %}
 
+    <style>
 
+        .clickable {
+
+        }
+
+        .clickable:hover {
+            cursor: pointer;
+        }
+
+        .title {
+
+            font-size: 18px;
+            font-weight: 500;
+
+        }
+
+        .notice {
+
+            margin: 30px 0;
+            font-size: 14px;
+            display: none;
+            color: darkgray;
+
+        }
+
+    </style>
 
     <div class="row" style="padding-top: 20px;">
 
 
-        <div class="col-md-8 text-center" id="image-box" data-id="{{ image }}">
-
+        <div class="col-md-8" id="image-box" data-id="{{ image }}">
             <div id="container" style="width: 100%"></div>
         </div>
 
 
-        <div class="col-md-2 text-center">
+        <div class="col-md-4">
 
-            <div id="block-faceDetails">
-                <h5 style="padding-bottom: 10px">People(<strong id="count-faceDetails">0</strong>)</h5>
-            </div>
-        </div>
+            <div class="row" id="block-faceDetails">
+                <div class="col-md-12">
+                    <p class="title">People</p>
 
-        <div class="col-md-2 text-center">
-            <div id="block-labels">
-                <h5 style="padding-bottom: 10px">Labels(<strong id="count-labels">0</strong>)</h5>
+                    <div id="notice-faceDetails" class="notice text-center">Unable find any person in this image.</div>
+                </div>
             </div>
+
+            <hr>
+
+            <div style="margin-top: 20px">
+                <p class="title">Labels</p>
+                <div id="notice-labels" class="notice text-center">Unable find any label in this image.</div>
+                <div id="block-labels" style=" display: flex;flex-wrap: wrap;"></div>
+            </div>
+
+            <hr>
+
+            <div style="margin-top: 20px">
+                <p class="title">Celebrity</p>
+                <div id="notice-celebrityFaces" class="notice text-center">Unable find any celebrity in this image.
+                </div>
+                <div id="block-celebrityFaces" style=" display: flex;flex-wrap: wrap;"></div>
+            </div>
+
         </div>
 
         <div class="col-md-12">
-
             <div id="block-celebrityFaces">
-
-
             </div>
-
         </div>
 
+    </div>
+
+
+    <div id="template-faceDetails" style="display: none">
+        <div class="col-md-4 d-flex align-items-stretch">
+            <div class="card clickable" style="width: 100%; margin-bottom: 10px;" onclick="">
+                <div class="card-body text-center" style="padding: 10px">
+                    <p class="gender" style="margin-bottom: 10px"></p>
+                    <p class="age" style="margin-bottom: 0"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="template-labels" style="display: none">
+        <div style=" margin-right: 15px; margin-bottom: 5px">
+            <a class="clickable draw-click" style="font-size: 16px; color: gray;"></a>
+            <a class="clickable search"><i class="fa fa-search" style="font-size: 14px; color: gray"></i></a>
+        </div>
+    </div>
+
+    <div id="template-celebrityFaces" style="display: none">
+        <div>
+            <a style="font-size: 14px; color:gray; text-decoration: underline;"></a>
+        </div>
     </div>
 
     <script src="https://unpkg.com/konva@3.2.3/konva.min.js"></script>

@@ -20,7 +20,7 @@ def image_batch(query):
     table = get_db().Table('Index')
 
     response = table.scan(
-        FilterExpression=Key('label').eq(query)
+        FilterExpression=Key('label').eq(query.lower())
     )
 
     images = response['Items'] if response['Items'] else []
