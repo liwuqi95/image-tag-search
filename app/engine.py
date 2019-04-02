@@ -15,8 +15,8 @@ def index():
     return render_template('engine/index.html')
 
 
-@bp.route('/engine/batch/<string:query>/<int:page>')
-def image_batch(query, page):
+@bp.route('/engine/batch/<string:query>')
+def image_batch(query):
     table = get_db().Table('Index')
 
     response = table.scan(

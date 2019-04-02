@@ -1,27 +1,1 @@
-$(document).ready(function () {
-
-
-    $.ajax({
-        url: 'https://s3.amazonaws.com/ece1779projecta3bucket/faceDetails/' + $('#image-box').data("id") + '.json',
-        success: function (data) {
-            data = JSON.parse(data);
-            console.log(data)
-        }
-    });
-
-    $.ajax({
-        url: 'https://s3.amazonaws.com/ece1779projecta3bucket/labels/' + $('#image-box').data("id") + '.json',
-        success: function (data) {
-            data = JSON.parse(data);
-
-            if (data['lables'].length > 0) {
-
-
-
-
-            }
-        }
-    });
-
-
-})
+$(document).ready(function () {    var width = $('#container').width();    var height;    var imageObj = new Image();    var stage;    imageObj.onload = function () {        height = width * imageObj.height / imageObj.width;        var yoda = new Konva.Image({            x: 0,            y: 0,            image: imageObj,            width: width,            height: height        });        stage = new Konva.Stage({            container: 'container',            width: width,            height: height        });        var layer = new Konva.Layer();        // add the shape to the layer        layer.add(yoda);        // add the layer to the stage        stage.add(layer);    };    imageObj.src = 'https://s3.amazonaws.com/ece1779projecta3bucket/images/' + $('#image-box').data("id");    var globalData = {};    var layers = {};    drawBox = function (type, index) {        layer = layers[type][index];        if (layer) {            layer.destroy();            layers[type][index] = null;        } else {            data = globalData[type][index];            box = data['BoundingBox'];            layer = new Konva.Layer();            var rect = new Konva.Rect({                x: box['Left'] * width,                y: box['Top'] * height,                width: box['Width'] * width,                height: box['Height'] * height,                stroke: 'red',                strokeWidth: 2            });            layer.add(rect);            stage.add(layer);            layers[type][index] = layer;        }    };    getButtonText = function (name, data) {        if (name === 'faceDetails')            return data['Gender']['Value'] + ',  ' + data['AgeRange']['Low'] + ' - ' + data['AgeRange']['High'];        else            return data['Name'];    };    getButtonStyle = function (name) {        if (name === 'faceDetails')            return 'success';        else            return 'primary';    };    function button(text, type, index) {        return '<button class="btn btn-outline-' + getButtonStyle(type) + ' btn-sm btn-block" onclick="drawBox(\'' + type + '\'\,' + index + ')">' + text + '</button>'    }    dataArray = ['faceDetails', 'labels', 'celebrityFaces'];    dataArray.forEach(function (name) {        $.ajax({            url: 'https://s3.amazonaws.com/ece1779projecta3bucket/' + name + '/' + $('#image-box').data("id") + '.json',            success: function (data) {                data = JSON.parse(data)[name];                globalData[name] = data;                layers[name] = [];                if (data.length > 0) {                    $('#count-' + name).text(data.length);                    data.forEach(function (face, index) {                        $('#block-' + name).append(button(getButtonText(name, face), name, index));                        layers[name].push(null)                    })                }            }        });    });});

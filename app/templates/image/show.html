@@ -4,32 +4,42 @@
 {% block content %}
 
 
+
     <div class="row" style="padding-top: 20px;">
 
-        <div class="col-md-9 text-center" id="image-box" data-id="{{ image }}">
 
-            <img src="{{ 'https://s3.amazonaws.com/ece1779projecta3bucket/images/' + image }}" width="100%">
+        <div class="col-md-8 text-center" id="image-box" data-id="{{ image }}">
 
+            <div id="container" style="width: 100%"></div>
         </div>
 
 
-        <div class="col-md-3 text-center">
+        <div class="col-md-2 text-center">
 
+            <div id="block-faceDetails">
+                <h5 style="padding-bottom: 10px">People(<strong id="count-faceDetails">0</strong>)</h5>
+            </div>
         </div>
 
-    </div>
+        <div class="col-md-2 text-center">
+            <div id="block-labels">
+                <h5 style="padding-bottom: 10px">Labels(<strong id="count-labels">0</strong>)</h5>
+            </div>
+        </div>
 
-    <div class="row" style="margin-top: 30px">
         <div class="col-md-12">
 
-            <p>
-                <a href="{{ url_for('image.index') }}" class="btn btn-outline-primary"> Back to Album </a>
-            </p>
+            <div id="block-celebrityFaces">
+
+
+            </div>
 
         </div>
 
     </div>
 
+    <script src="https://unpkg.com/konva@3.2.3/konva.min.js"></script>
     <script src="{{ url_for('static', filename='image_show.js') }}"></script>
+
 {% endblock %}
 
