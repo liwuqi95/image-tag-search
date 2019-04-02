@@ -40,13 +40,24 @@
 
 
         <div class="col-md-4">
-            {% if g.user['username'] == image['user'] %}
-                <div class="text-right">
-                    <a href="{{ url_for('image.remove', id=image['imageid']) }}"
-                       onclick="return confirm('Are you sure to delete this image?')" class="btn btn-outline-danger">Delete</a>
-                </div>
 
-            {% endif %}
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div style="float:left">
+                        <a style="font-size:25px" href="{{ url_for('image.like',id =image['imageid']) }}"><i
+                                class="fa{{ '' if like else 'r' }} fa-heart"></i></a>
+                    </div>
+                    {% if g.user['username'] == image['user'] %}
+                        <div style="float:right">
+                            <a href="{{ url_for('image.remove', id=image['imageid']) }}"
+                               onclick="return confirm('Are you sure to delete this image?')"
+                               class="btn btn-outline-danger">Delete</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
 
             <div class="row" id="block-faceDetails">
                 <div class="col-md-12">

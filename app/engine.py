@@ -5,6 +5,7 @@ from werkzeug.exceptions import abort
 from app.aws import move_to_s3, get_db
 from boto3.dynamodb.conditions import Key, Attr
 from app.auth import login_required
+from random import sample
 
 bp = Blueprint('engine', __name__)
 
@@ -25,11 +26,11 @@ def image_batch(query):
         )
     else:
         table = get_db().Table('Images')
-        response = table.scan(
-            Limit=10
-        )
+        response = table.scan()
 
-        response['Items'] = [{'ids': list(map(lambda i: i['imageid'], list(response['Items'])))}]
+        data = response['Items'] if len(response['Items']) <= 12 else sample(response['Items'], 10)
+
+        response['Items'] = [{'ids': list(map(lambda i: i['imageid'], data))}]
 
     images = response['Items'] if response['Items'] else []
 

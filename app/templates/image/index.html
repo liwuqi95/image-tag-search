@@ -31,13 +31,14 @@
     <div class="row">
 
         <div class="col-md-12">
-            <h4>My Album <b style="font-size: 14px">({{ images|length }} images)</b>
+            <h4>My {{ 'Favorites' if favorite else 'Album' }} <b style="font-size: 14px">({{ images|length }}
+                images)</b>
 
-
-                <div style="float: right">
-                    <a href="{{ url_for('image.create') }}" class="btn btn-outline-success">Add New Image</a>
-                </div>
-
+                {% if not favorite %}
+                    <div style="float: right">
+                        <a href="{{ url_for('image.create') }}" class="btn btn-outline-success">Add New Image</a>
+                    </div>
+                {% endif %}
             </h4>
         </div>
 
@@ -47,7 +48,15 @@
 
         <div class="col-md-12">
             {% if images|length == 0 %}
-                <p class="text-center" style="margin-top: 20%;">You do not have any image currently, upload now!</p>
+                <p class="text-center" style="margin-top: 20%;">
+
+                    {% if  favorite %}
+                        You do not have any favorite image, find more in our home page
+                    {% else %}
+                        You do not have any image currently, upload now!
+                    {% endif %}
+
+                </p>
             {% endif %}
         </div>
 

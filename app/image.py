@@ -15,7 +15,7 @@ url_prefix = 'https://s3.amazonaws.com/ece1779projecta3bucket/'
 
 
 def get_url(type, image):
-    key = type + '/' + str(image["imageid"])
+    key = type + '/' + str(image)
     return url_prefix + key
 
 
@@ -34,9 +34,21 @@ def index():
 
     for image in images:
         image['imageid'] = str(image['imageid'])
-        image['thumb'] = get_url('thumbnails', image)
+        image['thumb'] = get_url('thumbnails', image['imageid'])
 
-    return render_template('image/index.html', images=images)
+    return render_template('image/index.html', images=images, favorite=False)
+
+
+@bp.route('/favorites')
+@login_required
+def favorites():
+    """Show all the images, most recent first."""
+
+    likes = g.user['likes'] if 'likes' in g.user else []
+
+    images = list(map(lambda i: {'imageid': i, 'thumb': get_url('thumbnails', i)}, likes))
+
+    return render_template('image/index.html', images=images, favorite=True)
 
 
 @bp.route('/image/<string:id>')
@@ -54,7 +66,7 @@ def show(id):
 
     image = response['Item'] if 'Item' in response else {'imageid': id, 'user': ''}
 
-    return render_template('image/show.html', image=image)
+    return render_template('image/show.html', image=image, like=('likes' in g.user and id in g.user['likes']))
 
 
 @bp.route('/image/remove/<string:id>')
@@ -73,6 +85,29 @@ def remove(id):
     delete_on_s3(id)
 
     return redirect(url_for('image.index'))
+
+
+@bp.route('/image/like/<string:id>')
+@login_required
+def like(id):
+    table = get_db().Table('Users')
+
+    if 'likes' not in g.user:
+        g.user['likes'] = {}
+
+    if id in g.user['likes']:
+        g.user['likes'].pop(id, None)
+    else:
+        g.user['likes'][id] = True
+
+
+    table.update_item(Key={'username': g.user['username']},
+                      UpdateExpression="set likes = :l",
+                      ExpressionAttributeValues={
+                          ':l': g.user['likes']
+                      })
+
+    return redirect(url_for('image.show', id=id))
 
 
 ##TODO add more image types
