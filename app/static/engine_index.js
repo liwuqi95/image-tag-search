@@ -49,10 +49,10 @@ var refreshImages = function (text) {
 
                     $('#results').append(template);
 
-                    if (text !== '$ANY$\'') {
+                    if (text !== '$ANY$') {
                         $('#result-text').find('strong').html(String($('#results').children().length));
-                        $('#result-text').show();
                     }
+                    $('#result-text').show();
                 });
             });
 
