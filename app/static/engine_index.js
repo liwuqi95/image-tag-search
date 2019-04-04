@@ -56,10 +56,15 @@ var refreshImages = function (text) {
                 });
             });
 
-            if (result.length < 1) {
-                $('#notice').show();
+            if (result.length < 1 || Object.keys(result[0].ids).length < 1) {
 
-                refreshImages('$ANY$');
+                if (text === '$ANY$') {
+                    $('#notice').show();
+                }
+                else {
+                    $('#notice').show();
+                    refreshImages('$ANY$');
+                }
             }
         }
     });
