@@ -70,7 +70,9 @@ var refreshImages = function (text) {
                 }
             }
 
-            similar.splice(similar.indexOf('foo'), 1);
+            if (similar.indexOf(text) > -1)
+                similar.splice(similar.indexOf(text), 1);
+
 
             if (text !== '$ANY$' && similar.length > 0) {
                 $('#similar-text').html('You may also like: ');
