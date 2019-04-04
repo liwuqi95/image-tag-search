@@ -34,8 +34,11 @@ var refreshImages = function (text) {
     $('.loading').show();
     $.ajax({
         url: "/engine/batch/" + text,
-        success: function (result) {
+        success: function (data) {
             $('.loading').hide(800);
+
+            result = data.images;
+            similar = data.similars;
 
             result.forEach(function (label) {
 
@@ -66,6 +69,20 @@ var refreshImages = function (text) {
                     refreshImages('$ANY$');
                 }
             }
+
+            similar.splice(similar.indexOf('foo'), 1);
+
+            if (text !== '$ANY$' && similar.length > 0) {
+                $('#similar-text').html('You may also like: ');
+                $('#similar-text').show();
+
+                similar.forEach(function (s) {
+                    $('#similar-text').append('<a style="color:white; border-radius: 5px; padding: 2px 8px; margin-right: 5px; background-color: silver" href="/?text=' + s + '">' + s + '</a>')
+                })
+
+            }
+
+
         }
     });
 
@@ -77,6 +94,7 @@ $('#text').on('change', function () {
 
     $('#results').html('');
     $('#result-text').hide();
+    $('#similar-text').hide();
     $('#notice').hide();
 
     var text = $('#text').val();

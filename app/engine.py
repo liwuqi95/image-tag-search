@@ -15,8 +15,6 @@ bp = Blueprint('engine', __name__)
 def index():
     table = get_db().Table('Index')
 
-
-
     return render_template('engine/index.html')
 
 
@@ -37,4 +35,13 @@ def image_batch(query):
 
     images = response['Items'] if response['Items'] else []
 
-    return jsonify(images)
+    response = table.scan(
+        FilterExpression=Attr('label').contains(query.lower()),
+        Limit=10
+    )
+
+    similars = response['Items'] if response['Items'] else []
+
+    similars = list(map(lambda x: x['label'], similars))
+
+    return jsonify({'images': images, 'similars': similars})
