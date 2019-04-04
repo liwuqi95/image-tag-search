@@ -49,9 +49,10 @@ var refreshImages = function (text) {
 
                     $('#results').append(template);
 
-
-                    $('#result-text').find('strong').html(String($('#results').children().length));
-                    $('#result-text').show();
+                    if (text !== '$ANY$\'') {
+                        $('#result-text').find('strong').html(String($('#results').children().length));
+                        $('#result-text').show();
+                    }
                 });
             });
 
