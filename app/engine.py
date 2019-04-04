@@ -13,6 +13,10 @@ bp = Blueprint('engine', __name__)
 @bp.route('/')
 @login_required
 def index():
+    table = get_db().Table('Index')
+
+
+
     return render_template('engine/index.html')
 
 
