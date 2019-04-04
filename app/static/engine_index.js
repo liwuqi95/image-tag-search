@@ -40,7 +40,7 @@ var refreshImages = function (text) {
             result.forEach(function (label) {
 
                 ids = label.ids;
-                ids.forEach(function (id) {
+                Object.keys(ids).forEach(function (id) {
                     template = $('#template').children(":first").clone();
 
                     template.find('img').attr("src", 'https://s3.amazonaws.com/ece1779projecta3bucket/thumbnails/' + id);

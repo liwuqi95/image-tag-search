@@ -29,7 +29,6 @@ def image_batch(query):
         response = table.scan()
 
         data = response['Items'] if len(response['Items']) <= 12 else sample(response['Items'], 10)
-
         response['Items'] = [{'ids': list(map(lambda i: i['imageid'], data))}]
 
     images = response['Items'] if response['Items'] else []

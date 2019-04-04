@@ -36,6 +36,7 @@ def index():
         image['imageid'] = str(image['imageid'])
         image['thumb'] = get_url('thumbnails', image['imageid'])
 
+
     return render_template('image/index.html', images=images, favorite=False)
 
 
