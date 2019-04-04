@@ -30,8 +30,15 @@ def image_batch(query):
         table = get_db().Table('Images')
         response = table.scan()
 
-        data = response['Items'] if len(response['Items']) <= 12 else sample(response['Items'], 10)
-        response['Items'] = [{'ids': list(map(lambda i: i['imageid'], data))}]
+        if response['Items'] is None:
+            response['Items'] = []
+
+        data = response['Items'] if len(response['Items']) <= 12 else sample(response['Items'], 12)
+        r = {}
+        for d in data:
+            r[d['imageid']] = True
+
+        response['Items'] = [{'ids': r}]
 
     images = response['Items'] if response['Items'] else []
 
