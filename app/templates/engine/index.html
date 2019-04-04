@@ -135,7 +135,7 @@
 
             $('.loading').show();
             $.ajax({
-                url: '{{ url_for('engine.image_batch',query='') }}' + text,
+                url: '{{ url_for('engine.image_batch', query='') }}' + text,
                 success: function (data) {
                     $('.loading').hide(800);
 
@@ -160,6 +160,11 @@
                             $('#result-text').show();
                         });
                     });
+
+                    if (text !== '$ANY$') {
+                        $('#result-text').find('strong').html(String($('#results').children().length));
+                    }
+                    $('#result-text').show();
 
                     if (result.length < 1 || Object.keys(result[0].ids).length < 1) {
 
