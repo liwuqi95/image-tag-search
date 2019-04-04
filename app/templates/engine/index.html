@@ -81,7 +81,7 @@
 
     <div id="template" style="display: none">
 
-        <div class="col-md-3 d-flex align-items-stretch">
+        <div class="col-md-3 d-flex align-items-stretch" style="margin-bottom: 20px">
 
             <div class="card" style="width: 100%">
                 <div class="card-body" style="padding: 10px">
@@ -188,7 +188,7 @@
                         href = '{{ url_for('engine.index') }}' + '?text=';
 
                         similar.forEach(function (s) {
-                            $('#similar-text').append('<a style="color:white; border-radius: 5px; padding: 2px 8px; margin-right: 5px; background-color: silver" href="' + href + s + '">' + s + '</a>')
+                            $('#similar-text').append('<a style="color:white; border-radius: 5px; padding: 2px 8px; margin: 2px; background-color: silver" href="' + href + s + '">' + s + '</a>')
                         })
 
                     }

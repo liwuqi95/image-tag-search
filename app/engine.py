@@ -43,8 +43,7 @@ def image_batch(query):
     images = response['Items'] if response['Items'] else []
 
     response = table.scan(
-        FilterExpression=Attr('label').contains(query.lower()),
-        Limit=10
+        FilterExpression=Attr('label').contains(query.lower())
     )
 
     similars = response['Items'] if response['Items'] else []
