@@ -33,7 +33,7 @@ var refreshImages = function (text) {
 
     $('.loading').show();
     $.ajax({
-        url: "/engine/batch/" + text,
+        url: "engine/batch/" + text,
         success: function (data) {
             $('.loading').hide(800);
 
