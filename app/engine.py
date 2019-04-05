@@ -23,9 +23,24 @@ def image_batch(query):
     table = get_db().Table('Index')
 
     if query != '$ANY$':
-        response = table.scan(
-            FilterExpression=Key('label').eq(query.lower())
-        )
+        aggr_ids = set([])
+        for s in query.split():
+            resp = table.scan(
+                FilterExpression=Key('label').eq(s.lower())
+            )
+            if 'Items' in resp:
+                for item in resp['Items']:
+                    keys = set(item['ids'].keys())
+                    if len(aggr_ids)== 0:
+                        aggr_ids = keys
+                    else:
+                        aggr_ids = aggr_ids.intersection(keys)
+        response = {'Items' : []}
+        if len(aggr_ids) != 0:
+            response['Items'].append({'ids': {}, 'label' : query.lower()})
+        for imageId in aggr_ids:
+            response['Items'][0]['ids'][imageId] = True
+            
     else:
         table = get_db().Table('Images')
         response = table.scan()
