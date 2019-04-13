@@ -21,8 +21,9 @@ from app import db
 db.init_app(app)
 
 # init routes
-from app import auth, engine, image
+from app import auth, engine, image,api
 
 app.register_blueprint(auth.bp)
 app.register_blueprint(engine.bp)
 app.register_blueprint(image.bp)
+app.register_blueprint(api.bp)

@@ -5,9 +5,10 @@ from flask import (
     Blueprint, flash, g, redirect, request, url_for
 )
 from werkzeug.security import check_password_hash, generate_password_hash
+from datetime import datetime
+from app.auth import login_required
+from app.aws import move_to_s3, get_db, delete_on_s3
 
-from app.db import get_db
-from app.ImageProcessing import save_thumbnail, draw_face_rectangle
 import os
 from app import app
 from app.aws import move_to_s3
@@ -28,7 +29,7 @@ def register():
     username = request.form['username']
     password = request.form['password']
 
-    cursor = get_db().cursor()
+    table = get_db().Table('Users')
     error = None
 
    
@@ -41,16 +42,23 @@ def register():
     elif '\'' in username or '\"' in username:
         error = 'Username cannot contain quotation marks.'
     else:
-        cursor.execute(
-            'SELECT id FROM users WHERE username = %s', (username,)
+        response = table.get_item(
+            Key={
+                'username': username
+            }
         )
-        if cursor.fetchone() is not None:
+
+        if 'Item' in response:
             error = 'User {0} is already registered.'.format(username)
 
     if error is None:
-        cursor.execute('INSERT INTO users (username, password) VALUES (%s, %s)',
-                       (username, generate_password_hash(password)))
-        get_db().commit()
+        table.put_item(
+            Item={
+                'username': username,
+                'password': generate_password_hash(password)
+            }
+        )
+
         return 'ok\n'
 
     return abort(404, error)
@@ -78,10 +86,17 @@ def upload():
     error = None
     username = request.form['username']
     password = request.form['password']
-    cursor = get_db().cursor(dictionary=True)
-    cursor.execute('SELECT * FROM users WHERE username = %s', (username,))
 
-    user = cursor.fetchone()
+    table = get_db().Table('Users')
+
+    response = table.get_item(
+        Key={
+            'username': username
+        }
+    )
+
+    user = response['Item'] if 'Item' in response else None
+
     if user is None:
         error = 'User is not valid'
     elif not check_password_hash(user["password"], password):
@@ -101,23 +116,20 @@ def upload():
     else:
         file = request.files['file']
         filename = file.filename
-        cursor = get_db().cursor()
-        cursor.execute('INSERT INTO images ( name, user_id) VALUES (%s, %s)', (filename, user['id']))
-        id = cursor.lastrowid
-
+        id = datetime.utcnow().strftime("%Y-%m-%d-%H-%M-%S-%f") + user['username'].replace('.', '').replace('/','')
         filename = str(id) + '.' + filename.rsplit('.', 1)[1].lower()
-        file.save(os.path.join(app.root_path, 'images/', filename))
 
-        try:
-            save_thumbnail(filename, 200, 200)
-            draw_face_rectangle(filename)
-            move_to_s3('images/' + filename)
-            get_db().commit()
-            return 'ok\n'
+        table = get_db().Table('Images')
 
-        except:
-            get_db().rollback()
-            error = "Error creating image."
-            os.remove(os.path.join(app.root_path, 'images/', filename))
+        table.put_item(
+            Item={
+                'imageid': filename,
+                'user': user['username']
+            }
+        )
+
+        move_to_s3(file, filename)
+
+        return 'ok\n'
 
     return abort(404, error)
